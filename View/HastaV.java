@@ -11,7 +11,10 @@ import javax.swing.table.DefaultTableModel;
 
  
 import Business.DoctorController;
+import Business.HastaController;
+import DataAccess.Clinic;
 import DataAccess.Doctor;
+import DataAccess.Hasta;
 
 import javax.swing.JTable;
 import javax.swing.JTextField;
@@ -25,14 +28,14 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-public class DoctorV extends JFrame {
+public class HastaV extends JFrame {
 	
 	
-	DoctorController dC=new DoctorController();
-	Doctor doc= new Doctor();
+	HastaController hC=new HastaController();
+	Hasta hasta= new Hasta();
 
 	private JPanel contentPane;
-	public JTable tableDoctor;
+	private JTable tableHasta;
 	private JTextField isimT;
 	private JTextField tcT;
 	private JTextField sifreT;
@@ -53,7 +56,7 @@ public class DoctorV extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					DoctorV frame = new DoctorV();
+					HastaV frame = new HastaV();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -65,8 +68,8 @@ public class DoctorV extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public DoctorV() {
-		setTitle("Doktor Paneli");
+	public HastaV() {
+		setTitle("Hasta Paneli");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 719, 378);
 		contentPane = new JPanel();
@@ -79,14 +82,14 @@ public class DoctorV extends JFrame {
 		scrollPane.setBounds(10, 135, 409, 193);
 		contentPane.add(scrollPane);
 		
-		tableDoctor = new JTable();
-		tableDoctor.setBounds(10, 36, 409, 217);
+		tableHasta = new JTable();
+		tableHasta.setBounds(10, 36, 409, 217);
 		 
 		 
 		modelim.setColumnIdentifiers(kolonlar);
-		scrollPane.setViewportView(tableDoctor);
+		scrollPane.setViewportView(tableHasta);
 		
-		listeYenileDoctor();
+		listeYenileHasta();
 		
 		isimT = new JTextField();
 		isimT.setBounds(527, 135, 166, 20);
@@ -128,7 +131,7 @@ public class DoctorV extends JFrame {
 		bolumT.setBounds(527, 227, 166, 20);
 		contentPane.add(bolumT);
 		
-		tipT = new JTextField("Doktor");
+		tipT = new JTextField("Hasta");
 		tipT.setEditable(false);
 		tipT.setEnabled(false);
 		tipT.setColumns(10);
@@ -139,13 +142,18 @@ public class DoctorV extends JFrame {
 		ekleB.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-				doc= new Doctor(Integer.parseInt(bolumT.getText()), isimT.getText(), sifreT.getText(), tcT.getText(), tipT.getText()); 
+				hasta= new Hasta(Integer.parseInt(bolumT.getText()), isimT.getText(), sifreT.getText(), tcT.getText(), tipT.getText()); 
 				
-				dC.addUser(doc);
+				hC.addHasta(hasta);
 				
 				JOptionPane.showMessageDialog(null, "Eklendi!", "Mesaj", JOptionPane.INFORMATION_MESSAGE);
 				
-				 listeYenileDoctor();
+				listeYenileHasta();
+				bolumT.setText("");
+				isimT.setText("");
+				sifreT.setText("");
+				tcT.setText("");
+				
 				
 				
 			}
@@ -159,20 +167,20 @@ public class DoctorV extends JFrame {
 				
 				
 				 
-				 if(tableDoctor.getSelectedRow()<0) {
+				 if(tableHasta.getSelectedRow()<0) {
 					 				
 						JOptionPane.showMessageDialog(null, "Önce Seçiniz!", "Mesaj", JOptionPane.INFORMATION_MESSAGE);
 					
 						
 					}
 					else {
-						 doc=dC.getDoctorList().get(tableDoctor.getSelectedRow());  // tablodan nesne alma işlemi...
+						hasta=hC.getHastaList().get(tableHasta.getSelectedRow());  // tablodan nesne alma işlemi...
 						 
-						 dC.deleteDoctor(doc);
+						 hC.deleteHasta(hasta);
 				 
-				 JOptionPane.showMessageDialog(null,doc.getName() + " isimli Kullanıcı Başarıyla Silindi!", "Kullanıcı Silme Paneli", JOptionPane.INFORMATION_MESSAGE);
+				 JOptionPane.showMessageDialog(null,hasta.getName() + " isimli Kullanıcı Başarıyla Silindi!", "Kullanıcı Silme Paneli", JOptionPane.INFORMATION_MESSAGE);
 				
-				 listeYenileDoctor();
+				 listeYenileHasta();
 					}
 				
 				
@@ -185,7 +193,7 @@ public class DoctorV extends JFrame {
 		duzenle.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-	if(tableDoctor.getSelectedRow()<0) {
+	if(tableHasta.getSelectedRow()<0) {
 					
 					JOptionPane.showMessageDialog(null, "Önce Seçiniz!", "Mesaj", JOptionPane.INFORMATION_MESSAGE);
 				
@@ -193,18 +201,22 @@ public class DoctorV extends JFrame {
 				}
 				else {
 					
-					 doc=dC.getDoctorList().get(tableDoctor.getSelectedRow());  // tablodan nesne alma işlemi...
+					// Tabloyu hücre içinden güncelleme
+					 int ii = tableHasta.getSelectedRow();
+					 int id_Al= Integer.parseInt(tableHasta.getModel().getValueAt(ii, 0).toString());
+					  String tc_Al=tableHasta.getModel().getValueAt(ii,1).toString();
+		              String isim_Al=tableHasta.getModel().getValueAt(ii,2).toString();
+		              String sifre_Al=tableHasta.getModel().getValueAt(ii,3).toString();
+		              String tip_Al=tableHasta.getModel().getValueAt(ii,4).toString();
+		    
+		              tableHasta.revalidate();
+		              tableHasta.repaint();
+		        
+		              hasta= new Hasta(id_Al,0,isim_Al,sifre_Al,tc_Al,tip_Al);
+		      
+					  hC.updateHasta(hasta);
 					
-					DoctorUptade cdu=new DoctorUptade();
-					
-					cdu.tcc.setText(doc.getTc());
-					cdu.isimm.setText(doc.getName());
-					cdu.sifree.setText(doc.getPassword());
-					cdu.typee.setText(doc.getType());
-					cdu.id_getir.setText(String.valueOf(doc.getId()));
-					cdu.bolumm.setText(String.valueOf(doc.getBolum()));
-					
-					cdu.setVisible(true);
+			
 					
 					
 			 }
@@ -217,7 +229,7 @@ public class DoctorV extends JFrame {
 		yenile.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
-				listeYenileDoctor();
+				listeYenileHasta();
 			}
 		});
 		yenile.setBounds(10, 101, 409, 23);
@@ -246,19 +258,19 @@ public class DoctorV extends JFrame {
 	}
 	
 	
-public void listeYenileDoctor() {
+public void listeYenileHasta() {
 		
 		modelim.setRowCount(0);
 		
-	for(int i=0; i<dC.getDoctorList().size(); i++) {
+	for(int i=0; i<hC.getHastaList().size(); i++) {
 			
-			satirlar[0]=dC.getDoctorList().get(i).getId();
-			satirlar[1]=dC.getDoctorList().get(i).getTc();
-			satirlar[2]=dC.getDoctorList().get(i).getName();
-			satirlar[3]=dC.getDoctorList().get(i).getPassword();
-			satirlar[4]=dC.getDoctorList().get(i).getType();
+			satirlar[0]=hC.getHastaList().get(i).getId();
+			satirlar[1]=hC.getHastaList().get(i).getTc();
+			satirlar[2]=hC.getHastaList().get(i).getName();
+			satirlar[3]=hC.getHastaList().get(i).getPassword();
+			satirlar[4]=hC.getHastaList().get(i).getType();
 			modelim.addRow(satirlar);
 			}
-				 tableDoctor.setModel(modelim);
+	tableHasta.setModel(modelim);
 	}
 }

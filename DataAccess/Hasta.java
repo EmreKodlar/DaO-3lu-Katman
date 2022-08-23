@@ -10,26 +10,26 @@ import com.mysql.jdbc.PreparedStatement;
 import com.mysql.jdbc.Statement;
 
  
-import View.DoctorV;
+
 
  
 
-public class Doctor extends User {
+public class Hasta extends User {
 	 
 	 
-	public Doctor(int id, int bolum, String name, String password, String tc, String type) {
+	public Hasta(int id, int bolum, String name, String password, String tc, String type) {
 		super(id, bolum, name, password, tc, type);
 		// TODO Auto-generated constructor stub
 	}
 	
 	//eklemek için gerekli...
-	public Doctor(int bolum, String name, String password, String tc, String type) {
+	public Hasta(int bolum, String name, String password, String tc, String type) {
 		super(bolum, name, password, tc, type);
 		 
 	}
 	
 	 
-	public Doctor( ) {
+	public Hasta( ) {
 		 
 	}
 
@@ -38,23 +38,23 @@ public class Doctor extends User {
 	ResultSet rs=null;
 	Connection con=conn.connDb();
 	PreparedStatement preparedStatement= null;
-	public List<Doctor> list;
-	Doctor doctor;
+	public List<Hasta> list;
+	Hasta hasta;
 	
 	
-	public List<Doctor> getAllDoctor(){
+	public List<Hasta> getAllHasta(){
 	 
-		list = new ArrayList<Doctor>();
+		list = new ArrayList<Hasta>();
 		
 	try {
 		 
 		st =(Statement) con.createStatement();
-		rs=st.executeQuery("SELECT c_id,c_tc,c_isim,c_sifre,c_tip,c_bolum FROM calisan WHERE c_tip='Doktor'");
+		rs=st.executeQuery("SELECT c_id,c_tc,c_isim,c_sifre,c_tip,c_bolum FROM calisan WHERE c_tip='Hasta'");
 		while(rs.next()) {
 			
 	
-		doctor=new Doctor(rs.getInt("c_id"),rs.getInt("c_bolum"),rs.getString("c_isim"),rs.getString("c_sifre"),rs.getString("c_tc"),rs.getString("c_tip"));
-		list.add(doctor); } 
+		hasta=new Hasta(rs.getInt("c_id"),rs.getInt("c_bolum"),rs.getString("c_isim"),rs.getString("c_sifre"),rs.getString("c_tc"),rs.getString("c_tip"));
+		list.add(hasta); } 
 		
 		 
 	 
@@ -66,7 +66,7 @@ public class Doctor extends User {
 			}
 	
 	
-	public void addDoctor(Doctor doc) {
+	public void addHasta(Hasta doc) {
 		
 	String sorguEkleme = " INSERT INTO calisan (c_tc,c_isim,c_sifre,c_bolum,c_tip)  VALUES (?, ?, ?, ?,?)";
 		
@@ -91,7 +91,7 @@ public class Doctor extends User {
 	}
 	
 	
-	public void deleteUser(Doctor user) {
+	public void deleteUser(Hasta user) {
 
 
 		String query = "DELETE FROM calisan WHERE c_id=?";
@@ -110,9 +110,9 @@ public class Doctor extends User {
 		
 	}
 	
-	public void updateDoctor(Doctor user) {
+	public void updateHasta(Hasta user) {
 
-		String query = "UPDATE calisan SET c_tc=?, c_isim=?, c_sifre=?, c_tip=?, c_bolum=? WHERE c_id=?";
+		String query = "UPDATE calisan SET c_tc=?, c_isim=?, c_sifre=?, c_tip=? WHERE c_id=?";
 		
 		 
 			
@@ -123,8 +123,8 @@ public class Doctor extends User {
 			preparedStatement.setString(2,user.getName());
 			preparedStatement.setString(3,user.getPassword());
 			preparedStatement.setString(4,user.getType());
-			preparedStatement.setInt(5,user.getBolum());
-			preparedStatement.setInt(6,user.getId());
+			preparedStatement.setInt(5,user.getId());
+			
 			 
 			preparedStatement.executeUpdate();
 			 
