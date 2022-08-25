@@ -8,12 +8,7 @@ import javax.swing.table.DefaultTableModel;
 
 import com.mysql.jdbc.PreparedStatement;
 import com.mysql.jdbc.Statement;
-
  
-
-
- 
-
 public class Hasta extends User {
 	 
 	 
@@ -33,106 +28,7 @@ public class Hasta extends User {
 		 
 	}
 
-	Database conn= new Database();
-	Statement st=null;
-	ResultSet rs=null;
-	Connection con=conn.connDb();
-	PreparedStatement preparedStatement= null;
-	public List<Hasta> list;
-	Hasta hasta;
-	
-	
-	public List<Hasta> getAllHasta(){
-	 
-		list = new ArrayList<Hasta>();
-		
-	try {
-		 
-		st =(Statement) con.createStatement();
-		rs=st.executeQuery("SELECT c_id,c_tc,c_isim,c_sifre,c_tip,c_bolum FROM calisan WHERE c_tip='Hasta'");
-		while(rs.next()) {
-			
-	
-		hasta=new Hasta(rs.getInt("c_id"),rs.getInt("c_bolum"),rs.getString("c_isim"),rs.getString("c_sifre"),rs.getString("c_tc"),rs.getString("c_tip"));
-		list.add(hasta); } 
-		
-		 
-	 
-	} 
-	catch (SQLException e) {e.printStackTrace();
-	} 
  
-	return list;
-			}
-	
-	
-	public void addHasta(Hasta doc) {
-		
-	String sorguEkleme = " INSERT INTO calisan (c_tc,c_isim,c_sifre,c_bolum,c_tip)  VALUES (?, ?, ?, ?,?)";
-		
-		try {
-			st=(Statement) con.createStatement();
-			preparedStatement=(PreparedStatement) con.prepareStatement(sorguEkleme);
-			 
-			preparedStatement.setString (1, doc.getTc());
-			preparedStatement.setString (2, doc.getName());
-			preparedStatement.setString   (3, doc.getPassword());
-			preparedStatement.setInt(4, doc.getBolum());
-			preparedStatement.setString(5, doc.getType());
-			 
-			preparedStatement.execute();
-			
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		
-	}
-	
-	
-	public void deleteUser(Hasta user) {
-
-
-		String query = "DELETE FROM calisan WHERE c_id=?";
-		
-		try {
-			st=(Statement) con.createStatement();
-			preparedStatement=(PreparedStatement) con.prepareStatement(query);
-			preparedStatement.setInt(1,user.getId());
-			 
-			preparedStatement.executeUpdate();
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	
-		
-	}
-	
-	public void updateHasta(Hasta user) {
-
-		String query = "UPDATE calisan SET c_tc=?, c_isim=?, c_sifre=?, c_tip=? WHERE c_id=?";
-		
-		 
-			
-		try {
-			st=(Statement) con.createStatement();
-			preparedStatement=(PreparedStatement) con.prepareStatement(query);
-			preparedStatement.setString(1,user.getTc());
-			preparedStatement.setString(2,user.getName());
-			preparedStatement.setString(3,user.getPassword());
-			preparedStatement.setString(4,user.getType());
-			preparedStatement.setInt(5,user.getId());
-			
-			 
-			preparedStatement.executeUpdate();
-			 
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-			
-		}
 	
 
 }

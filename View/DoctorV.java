@@ -28,8 +28,7 @@ import java.awt.event.MouseEvent;
 public class DoctorV extends JFrame {
 	
 	
-	DoctorController dC=new DoctorController();
-	Doctor doc= new Doctor();
+	
 
 	private JPanel contentPane;
 	public JTable tableDoctor;
@@ -38,6 +37,9 @@ public class DoctorV extends JFrame {
 	private JTextField sifreT;
 	private JTextField bolumT;
 	private JTextField tipT;
+	
+	DoctorController dC=new DoctorController();
+	Doctor doc= new Doctor();
 	
 	
 	//tablo oluşturma
@@ -49,7 +51,7 @@ public class DoctorV extends JFrame {
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
+	public static  void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
